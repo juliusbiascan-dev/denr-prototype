@@ -14,9 +14,15 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
     const [showPassword, setShowPassword] = React.useState(false);
 
     return (
-      <Input
-        type={showPassword ? "text" : "password"}
-        suffix={
+      <div className="relative w-full flex items-center">
+        <Input
+          type={showPassword ? "text" : "password"}
+          className={className}
+          {...props}
+          ref={ref}
+        />
+        <div className="absolute right-2 flex items-center gap-1">
+          {suffix}
           <div className="cursor-pointer">
             {showPassword ? (
               <EyeIcon className="h-4 w-4" onClick={() => setShowPassword(false)} />
@@ -24,7 +30,8 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
               <EyeOff className="h-4 w-4" onClick={() => setShowPassword(true)} />
             )}
           </div>
-        } className={className} {...props} ref={ref}></Input>
+        </div>
+      </div>
     )
   }
 )
