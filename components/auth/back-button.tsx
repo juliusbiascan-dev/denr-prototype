@@ -19,7 +19,7 @@ export const BackButton = ({
   return (
     <Button
       variant="link"
-      className={`font-normal text-[#08933D] hover:text-[#0C1B72] ${className}`}
+      className={`font-normal text-[#08933D] dark:text-[#7FA8A7] hover:text-[#0C1B72] dark:hover:text-[#08933D] ${className}`}
       size="sm"
       asChild
     >

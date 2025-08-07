@@ -33,9 +33,7 @@ export const LoginForm = () => {
   const urlError = searchParams.get("error") === "OAuthAccountNotLinked"
     ? "Email already in use with different provider!"
     : "";
-  const [turnstileStatus, setTurnstileStatus] = useState<
-    "success" | "error" | "expired" | "required"
-  >("required");
+
 
   const [showTwoFactor, setShowTwoFactor] = useState(false);
   const [error, setError] = useState<string | undefined>("");
@@ -53,11 +51,6 @@ export const LoginForm = () => {
   const onSubmit = (values: z.infer<typeof LoginSchema>) => {
     setError("");
     setSuccess("");
-
-    if (process.env.NODE_ENV !== 'development' && turnstileStatus !== "success") {
-      setError("Please verify you are not a robot");
-      return;
-    }
 
     startTransition(() => {
       login(values, callbackUrl)
