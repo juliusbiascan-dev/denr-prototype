@@ -81,52 +81,56 @@ export async function RecentEquipment() {
   const recentEquipments = await getRecentEquipments();
 
   return (
-    <Card className='h-full'>
+    <Card className="h-full">
       <CardHeader>
         <CardTitle>Recent Equipment</CardTitle>
         <CardDescription>
           {recentEquipments.length > 0
             ? `${recentEquipments.length} equipment items added recently.`
-            : 'No equipment found.'
-          }
+            : 'No equipment found.'}
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className='space-y-8'>
+        <div className="space-y-8">
           {recentEquipments.map((equipment) => (
-            <div key={equipment.id} className='flex items-center'>
-              <Avatar className='h-9 w-9'>
-                <AvatarFallback className='text-xs font-semibold'>
-                  {getCategoryIcon(equipment.category)}
-                </AvatarFallback>
-              </Avatar>
-              <div className='ml-4 space-y-1 flex-1'>
-                <p className='text-sm leading-none font-medium truncate'>{equipment.name}</p>
-                <p className='text-muted-foreground text-sm truncate'>{equipment.description}</p>
-                <div className='flex items-center gap-2'>
-                  <Badge variant='outline' className='text-xs'>
+            <div
+              key={equipment.id}
+              className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-0"
+            >
+              <div className="flex items-center sm:block">
+                <Avatar className="h-9 w-9" >
+                  <AvatarFallback className="text-xs font-semibold">
+                    {getCategoryIcon(equipment.category)}
+                  </AvatarFallback>
+                </Avatar>
+              </div>
+              <div className="sm:ml-4 space-y-1 flex-1">
+                <p className="text-sm leading-none font-medium truncate w-[100px] sm:w-auto">{equipment.name}</p>
+                <p className="text-muted-foreground text-sm truncate w-[120px] sm:w-auto">{equipment.description}</p>
+                <div className="flex flex-wrap items-center gap-2">
+                  <Badge variant="outline" className="text-xs">
                     {equipment.category}
                   </Badge>
                   {isExpired(equipment.validUntil) && (
-                    <Badge variant='destructive' className='text-xs'>
+                    <Badge variant="destructive" className="text-xs">
                       Expired
                     </Badge>
                   )}
                   {isExpiringSoon(equipment.validUntil) && !isExpired(equipment.validUntil) && (
-                    <Badge variant='secondary' className='text-xs'>
+                    <Badge variant="secondary" className="text-xs">
                       Expiring Soon
                     </Badge>
                   )}
                 </div>
               </div>
-              <div className='ml-auto text-right'>
-                <div className='text-xs text-muted-foreground'>Valid Until</div>
-                <div className='text-sm font-medium'>{formatDate(equipment.validUntil)}</div>
+              <div className="sm:ml-auto sm:text-right space-y-1 flex flex-row sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto">
+                <div className="text-xs text-muted-foreground">Valid Until</div>
+                <div className="text-sm font-medium">{formatDate(equipment.validUntil)}</div>
               </div>
             </div>
           ))}
           {recentEquipments.length === 0 && (
-            <div className='text-center text-muted-foreground py-4'>
+            <div className="text-center text-muted-foreground py-4">
               No equipment found. Add some equipment to see them here.
             </div>
           )}

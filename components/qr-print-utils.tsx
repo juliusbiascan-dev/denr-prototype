@@ -2,8 +2,14 @@
 
 import { Equipment } from '@/constants/data';
 import { Button } from '@/components/ui/button';
-import { Printer, Download } from 'lucide-react';
+import { Printer, Download, MoreVertical } from 'lucide-react';
 import QRCode from 'qrcode';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface QRPrintUtilsProps {
   equipments: Equipment[];
@@ -43,51 +49,86 @@ export function QRPrintUtils({ equipments, selectedEquipments }: QRPrintUtilsPro
           <style>
             body {
               font-family: Arial, sans-serif;
-              margin: 20px;
+              margin: 10px;
               background: white;
+              padding: 0;
             }
             .qr-grid {
               display: grid;
-              grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-              gap: 20px;
-              margin: 20px 0;
+              grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+              gap: 15px;
+              margin: 15px 0;
+              padding: 0 10px;
             }
             .qr-item {
               border: 1px solid #ddd;
               border-radius: 8px;
-              padding: 15px;
+              padding: 12px;
               text-align: center;
               background: white;
               page-break-inside: avoid;
+              width: 100%;
+              box-sizing: border-box;
             }
             .qr-item img {
-              margin: 10px 0;
+              margin: 8px 0;
+              max-width: 100%;
+              height: auto;
             }
             .equipment-name {
               font-weight: bold;
-              font-size: 14px;
-              margin-bottom: 5px;
+              font-size: clamp(12px, 3vw, 14px);
+              margin-bottom: 4px;
+              word-break: break-word;
             }
             .equipment-id {
-              font-size: 12px;
+              font-size: clamp(10px, 2.5vw, 12px);
               color: #666;
-              margin-bottom: 10px;
+              margin-bottom: 8px;
+              word-break: break-all;
             }
             .equipment-category {
-              font-size: 11px;
+              font-size: clamp(9px, 2.5vw, 11px);
               color: #888;
               background: #f5f5f5;
               padding: 2px 6px;
               border-radius: 4px;
               display: inline-block;
+              max-width: 100%;
+              overflow: hidden;
+              text-overflow: ellipsis;
             }
             .header {
               text-align: center;
-              margin-bottom: 30px;
+              margin-bottom: 20px;
+              padding: 0 10px;
+            }
+            .header h1 {
+              font-size: clamp(18px, 4vw, 24px);
+              margin: 10px 0;
+            }
+            .header p {
+              font-size: clamp(12px, 3vw, 14px);
+              margin: 5px 0;
+            }
+            @media screen and (max-width: 480px) {
+              body {
+                margin: 5px;
+              }
+              .qr-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+              }
+              .qr-item {
+                padding: 10px;
+              }
             }
             @media print {
               body { margin: 0; }
               .no-print { display: none; }
+              .qr-grid {
+                gap: 10px;
+              }
             }
           </style>
         </head>
@@ -164,25 +205,49 @@ export function QRPrintUtils({ equipments, selectedEquipments }: QRPrintUtilsPro
   const itemsToProcess = hasSelection ? selectedEquipments : equipments;
 
   return (
-    <div className="flex gap-2">
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => printQRCodes(itemsToProcess)}
-        disabled={itemsToProcess.length === 0}
-      >
-        <Printer className="h-4 w-4 mr-2" />
-        Print {hasSelection ? `Selected (${selectedEquipments.length})` : 'All'} QR Codes
-      </Button>
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => downloadQRCodes(itemsToProcess)}
-        disabled={itemsToProcess.length === 0}
-      >
-        <Download className="h-4 w-4 mr-2" />
-        Download {hasSelection ? `Selected (${selectedEquipments.length})` : 'All'} QR Codes
-      </Button>
-    </div>
+    <>
+      {/* Mobile View - Context Menu */}
+      <div className="sm:hidden">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild disabled={itemsToProcess.length === 0}>
+            <Button variant="outline" size="icon">
+              <MoreVertical className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-[200px]">
+            <DropdownMenuItem onClick={() => printQRCodes(itemsToProcess)}>
+              <Printer className="h-4 w-4 mr-2" />
+              <span>Print {hasSelection ? `(${selectedEquipments.length})` : 'All'}</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => downloadQRCodes(itemsToProcess)}>
+              <Download className="h-4 w-4 mr-2" />
+              <span>Download {hasSelection ? `(${selectedEquipments.length})` : 'All'}</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
+      {/* Desktop View - Regular Buttons */}
+      <div className="hidden sm:flex gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => printQRCodes(itemsToProcess)}
+          disabled={itemsToProcess.length === 0}
+        >
+          <Printer className="h-4 w-4 mr-2" />
+          Print {hasSelection ? `Selected (${selectedEquipments.length})` : 'All'} QR Codes
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => downloadQRCodes(itemsToProcess)}
+          disabled={itemsToProcess.length === 0}
+        >
+          <Download className="h-4 w-4 mr-2" />
+          Download {hasSelection ? `Selected (${selectedEquipments.length})` : 'All'} QR Codes
+        </Button>
+      </div>
+    </>
   );
 }

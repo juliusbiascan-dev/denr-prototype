@@ -9,6 +9,7 @@ export type Equipment = {
   category: string;
   validUntil: string;
   updatedAt: string;
+  status: 'active' | 'inactive';
 };
 
 //Info: The following data is used for the sidebar navigation and Cmd K bar.

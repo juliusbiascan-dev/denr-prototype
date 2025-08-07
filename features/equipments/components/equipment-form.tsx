@@ -41,7 +41,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { EquipmentSchema } from '@/schemas';
 import { FormError } from '@/components/form-error';
 import { FormSuccess } from '@/components/form-success';
-import { CATEGORY_OPTIONS } from './equipments-tables/options';
+import { useCategoryOptions } from './equipments-tables/options';
 
 const MAX_FILE_SIZE = 5000000;
 const ACCEPTED_IMAGE_TYPES = [
@@ -65,6 +65,7 @@ export default function EquipmentForm({
   const [success, setSuccess] = useState<string>('');
 
   const isEditing = !!initialData;
+  const categoryOptions = useCategoryOptions();
 
   const defaultValues = {
     name: initialData?.name || '',
@@ -176,7 +177,7 @@ export default function EquipmentForm({
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {CATEGORY_OPTIONS.map((option) => (
+                        {categoryOptions.map((option) => (
                           <SelectItem key={option.value} value={option.value}>
                             {option.label}
                           </SelectItem>

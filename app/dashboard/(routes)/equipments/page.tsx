@@ -28,8 +28,8 @@ export default async function Page(props: pageProps) {
   // const key = serialize({ ...searchParams });
 
   return (
-    <PageContainer scrollable={false}>
-      <div className='flex flex-1 flex-col space-y-4'>
+    <PageContainer scrollable={true}>
+      <div className='flex-1 flex flex-col space-y-4 h-full'>
         <div className='flex items-start justify-between'>
           <Heading
             title='Equipments'
@@ -39,7 +39,7 @@ export default async function Page(props: pageProps) {
             href='/dashboard/equipments/new'
             className={cn(buttonVariants(), 'text-xs md:text-sm')}
           >
-            <IconPlus className='mr-2 h-4 w-4' /> Add New
+            <IconPlus className='mr-2 h-4 w-4' /> Register
           </Link>
         </div>
         <Separator />

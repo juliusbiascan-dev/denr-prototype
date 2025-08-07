@@ -5,10 +5,9 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { DataTableColumnHeader } from '@/components/ui/table/data-table-column-header';
 import { Equipment } from '@/constants/data';
 import { Column, ColumnDef } from '@tanstack/react-table';
-import { CheckCircle2, Text, XCircle, QrCode, Eye, Edit, Trash2 } from 'lucide-react';
-import Image from 'next/image';
-import { CellAction } from './cell-action';
-import { CATEGORY_OPTIONS } from './options';
+import { CheckCircle2, Text, XCircle, QrCode, Edit, Trash2 } from 'lucide-react';
+import { DynamicCategoryFilter } from '@/components/ui/table/dynamic-category-filter';
+import { DEFAULT_CATEGORIES } from './options';
 import { QRCodeDisplay } from '@/components/qr-code-display';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -167,9 +166,10 @@ export const columns: ColumnDef<Equipment>[] = [
     },
     enableColumnFilter: true,
     meta: {
-      label: 'categories',
+      label: 'Categories',
       variant: 'multiSelect',
-      options: CATEGORY_OPTIONS
+      filterComponent: DynamicCategoryFilter,
+      options: DEFAULT_CATEGORIES // Provide default options while loading
     }
   },
 
@@ -191,9 +191,61 @@ export const columns: ColumnDef<Equipment>[] = [
   },
   {
     accessorKey: 'validUntil',
-    header: 'Valid Until'
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Valid Until' />
+    ),
+    cell: ({ cell }) => {
+      const date = new Date(cell.getValue<string>());
+      return <div>{date.toLocaleDateString('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric'
+      })}</div>;
+    }
   },
-
+  {
+    accessorKey: 'createdAt',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Date Registered' />
+    ),
+    cell: ({ cell }) => {
+      const date = new Date(cell.getValue<string>());
+      return <div>{date.toLocaleDateString('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric'
+      })}</div>;
+    }
+  },
+  {
+    accessorKey: 'updatedAt',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Last Updated' />
+    ),
+    cell: ({ cell }) => {
+      const date = new Date(cell.getValue<string>());
+      return <div>{date.toLocaleDateString('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric'
+      })}</div>;
+    }
+  },
+  {
+    id: 'status',
+    accessorKey: 'status',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Status' />
+    ),
+    cell: ({ cell }) => {
+      const status = cell.getValue<Equipment['status']>();
+      return (
+        <Badge variant={status === 'active' ? 'default' : 'secondary'} className='capitalize'>
+          {status}
+        </Badge>
+      );
+    }
+  },
   {
     id: 'actions',
     header: 'Actions',

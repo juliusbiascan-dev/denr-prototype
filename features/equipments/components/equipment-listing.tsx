@@ -23,6 +23,7 @@ export default async function EquipmentListingPage({ }: EquipmentListingPage) {
     };
 
     const data = await getEquipments(filters);
+    console.log('Equipment data:', data);
 
     if (!data.success) {
       return (
@@ -36,15 +37,24 @@ export default async function EquipmentListingPage({ }: EquipmentListingPage) {
     }
 
     const totalEquipments = data.total_equipments;
-    const equipments: Equipment[] = data.equipments.map((equipment: any) => ({
-      name: equipment.name,
-      description: equipment.description,
-      createdAt: equipment.createdAt,
-      id: equipment.id,
-      validUntil: equipment.validUntil,
-      category: equipment.category,
-      updatedAt: equipment.updatedAt
-    }));
+    const equipments: Equipment[] = data.equipments.map((equipment: any) => {
+      // Check if the equipment is expired based on validUntil date
+      const validUntilDate = new Date(equipment.validUntil);
+      const currentDate = new Date();
+      const isExpired = validUntilDate < currentDate;
+
+      // Ensure all dates are in ISO format for consistent handling
+      return {
+        name: equipment.name,
+        description: equipment.description,
+        createdAt: new Date(equipment.createdAt).toISOString(),
+        id: equipment.id,
+        validUntil: validUntilDate.toISOString(),
+        category: equipment.category,
+        updatedAt: new Date(equipment.updatedAt).toISOString(),
+        status: isExpired ? 'inactive' : 'active'
+      };
+    });
 
     return (
       <EquipmentTable
