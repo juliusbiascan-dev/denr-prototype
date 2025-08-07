@@ -63,7 +63,7 @@ export const RegisterForm = ({
     setSuccess("");
 
     startTransition(() => {
-      register(values, token, labId, isRoot)
+      register(values)
         .then((data) => {
           if (data.success && labId) {
             // Update redirection path to match new structure
