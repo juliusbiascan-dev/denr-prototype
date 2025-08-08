@@ -20,7 +20,6 @@ import {
 import {
   getTwoFactorConfirmationByUserId
 } from "@/data/two-factor-confirmation";
-//import { sendTwoFactorTokenSms } from "@/lib/sms";
 
 export const login = async (
   values: z.infer<typeof LoginSchema>,
@@ -98,10 +97,7 @@ export const login = async (
         twoFactorToken.email,
         twoFactorToken.token,
       );
-      // await sendTwoFactorTokenSms(
-      //   "09928322637",
-      //   twoFactorToken.token,
-      // );
+
       return { twoFactor: true };
     }
   }
@@ -117,11 +113,11 @@ export const login = async (
       switch (error.type) {
         case "CredentialsSignin":
           return { error: "Invalid credentials!" }
+
         default:
           return { error: "Something went wrong!" }
       }
     }
-
     throw error;
   }
 };

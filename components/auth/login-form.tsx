@@ -69,7 +69,14 @@ export const LoginForm = () => {
             setShowTwoFactor(true);
           }
         })
-        .catch(() => setError("Something went wrong"));
+        .catch((e) => {
+          // Ignore NEXT_REDIRECT errors as they are part of successful login
+          if (e.message && e.message.includes("NEXT_REDIRECT")) {
+            return; // This is actually a successful login
+          }
+
+          setError("Something went wrong");
+        });
     });
   };
 
@@ -80,9 +87,6 @@ export const LoginForm = () => {
       backButtonHref="/auth/register"
       showSocial={false}
     >
-      {error && (
-        <FormError message={error} />
-      )}
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
